@@ -60,6 +60,18 @@ return [
             'report' => false,
         ],
 
+        'ftp_scanner' => [
+            'driver' => 'ftp',
+            'host' => env('FTP_HOST'),
+            'username' => env('FTP_USERNAME'),
+            'password' => env('FTP_PASSWORD'),
+            'root' => '/incoming',
+            'port' => 21,
+            'passive' => true,
+            'ssl' => false,
+            'timeout' => 30,
+        ],
+
     ],
 
     /*

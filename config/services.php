@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'ocr' => [
+        'api_key' => env('OCR_SPACE_API_KEY'),
+    ],
+
 ];
