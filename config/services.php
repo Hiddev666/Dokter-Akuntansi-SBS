@@ -36,7 +36,10 @@ return [
     ],
 
     'ocr' => [
+        'api_endpoint' => env('OCR_SPACE_API_ENDPOINT'),
         'api_key' => env('OCR_SPACE_API_KEY'),
+        'engine' => env('OCR_SPACE_ENGINE'),
     ],
+
 
 ];

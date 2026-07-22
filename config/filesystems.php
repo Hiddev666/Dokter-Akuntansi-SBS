@@ -29,7 +29,6 @@ return [
     */
 
     'disks' => [
-
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
@@ -41,7 +40,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/') . '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
@@ -62,9 +61,9 @@ return [
 
         'ftp_scanner' => [
             'driver' => 'ftp',
-            'host' => env('FTP_HOST'),
-            'username' => env('FTP_USERNAME'),
-            'password' => env('FTP_PASSWORD'),
+            'host' => env('SCANNER_FTP_HOST'),
+            'username' => env('SCANNER_FTP_USERNAME'),
+            'password' => env('SCANNER_FTP_PASSWORD'),
             'root' => '/incoming',
             'port' => 21,
             'passive' => true,
@@ -72,6 +71,17 @@ return [
             'timeout' => 30,
         ],
 
+        // 'ftp_final' => [
+        //     'driver' => 'ftp',
+        //     'host' => env('FINAL_FTP_HOST'),
+        //     'username' => env('FINAL_FTP_USERNAME'),
+        //     'password' => env('FINAL_FTP_PASSWORD'),
+        //     'root' => '/root',
+        //     'port' => 21,
+        //     'passive' => true,
+        //     'ssl' => false,
+        //     'timeout' => 30,
+        // ],
     ],
 
     /*
@@ -88,5 +98,4 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
     ],
-
 ];
