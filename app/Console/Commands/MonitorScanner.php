@@ -25,9 +25,10 @@ class MonitorScanner extends Command
         foreach ($files as $file) {
             $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
-            if (!in_array($extension, $this->allowedExtensions)) {
+            if (! in_array($extension, $this->allowedExtensions)) {
                 $this->warn("Skipping non-image file: {$file}");
                 Storage::disk('ftp_scanner')->delete($file);
+
                 continue;
             }
 

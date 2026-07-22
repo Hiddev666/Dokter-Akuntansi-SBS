@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
-use Exception;
 
 class OcrService
 {
@@ -23,10 +23,11 @@ class OcrService
             ->attach('file', file_get_contents($file->getRealPath()), $file->getClientOriginalName())
             ->post($this->endpoint, [
                 'apikey' => $this->apiKey,
+                'OCREngine' => 2,
             ]);
 
         if ($response->failed()) {
-            throw new Exception('OCR service error: ' . $response->body());
+            throw new Exception('OCR service error: '.$response->body());
         }
 
         $data = $response->json();
@@ -35,16 +36,16 @@ class OcrService
             $errorMsg = is_array($data['ErrorMessage'] ?? null)
                 ? implode(', ', $data['ErrorMessage'])
                 : ($data['ErrorMessage'] ?? 'Unknown error');
-            throw new Exception('OCR processing error: ' . $errorMsg);
+            throw new Exception('OCR processing error: '.$errorMsg);
         }
 
         $parsed = $data['ParsedResults'][0] ?? null;
 
-        if (!$parsed || ($parsed['FileParseExitCode'] ?? 0) !== 1) {
+        if (! $parsed || ($parsed['FileParseExitCode'] ?? 0) !== 1) {
             $parseError = is_array($parsed['ErrorMessage'] ?? null)
                 ? implode(', ', $parsed['ErrorMessage'])
                 : ($parsed['ErrorMessage'] ?? 'No results');
-            throw new Exception('OCR parse failed: ' . $parseError);
+            throw new Exception('OCR parse failed: '.$parseError);
         }
 
         return [

@@ -15,6 +15,7 @@ class OcrController extends Controller
 
         try {
             $result = $ocr->extractText($request->file('file'));
+
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json([
