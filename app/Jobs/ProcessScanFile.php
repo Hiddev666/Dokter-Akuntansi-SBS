@@ -57,6 +57,9 @@ class ProcessScanFile implements ShouldQueue
             json_encode($ocrData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
         );
 
+        $content = file_get_contents($fullPath);
+        Storage::disk('s3')->put("scanner/originals/{$this->filename}", $content);
+
         Storage::disk('local')->delete($incomingPath);
 
         Log::info("OCR processed successfully", [
