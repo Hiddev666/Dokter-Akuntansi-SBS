@@ -14,23 +14,38 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased bg-gray-50">
+        <div class="min-h-screen" x-data>
+            <!-- Sidebar -->
+            <x-sidebar />
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+            <!-- Mobile Top Bar -->
+            <div class="md:hidden fixed top-0 left-0 right-0 z-40 h-16 bg-white border-b border-gray-200 flex items-center px-4">
+                <button
+                    @click="$dispatch('toggle-sidebar')"
+                    class="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
+                    </svg>
+                </button>
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 ml-3">
+                    <x-application-logo class="h-8 w-8 text-indigo-600" />
+                    <span class="font-semibold text-gray-900">{{ config('app.name', 'Laravel') }}</span>
+                </a>
+            </div>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <!-- Main Content -->
+            <div
+                class="transition-all duration-300 md:pl-64"
+                :class="$store.sidebar.collapsed ? 'md:!pl-20' : 'md:!pl-64'"
+            >
+
+                <!-- Page Content -->
+                <main class="p-4 sm:p-6 lg:p-8 md:mt-0 mt-16">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
     </body>
 </html>
