@@ -11,6 +11,9 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <!-- Icons -->
+        <script src="https://unpkg.com/lucide@latest"></script>
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -25,9 +28,7 @@
                     @click="$dispatch('toggle-sidebar')"
                     class="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
-                    </svg>
+                    <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2 ml-3">
                     <x-application-logo class="h-8 w-8 text-indigo-600" />

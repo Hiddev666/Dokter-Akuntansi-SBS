@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Override;
 
-class Vendor extends Model
+class DocumentType extends Model
 {
     protected $fillable = [
         'name',
@@ -16,8 +16,8 @@ class Vendor extends Model
     #[Override]
     protected static function booted()
     {
-        static::creating(function ($vendor) {
-            $vendor->slug = Str::slug($vendor->name);
+        static::creating(function ($documentType) {
+            $documentType->slug = Str::slug($documentType->name);
         });
     }
 }

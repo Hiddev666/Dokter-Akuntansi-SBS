@@ -41,5 +41,4 @@ return [
         'engine' => env('OCR_SPACE_ENGINE'),
     ],
 
-
 ];

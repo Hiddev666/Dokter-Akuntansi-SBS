@@ -13,3 +13,9 @@ Alpine.store('sidebar', {
 });
 
 Alpine.start();
+
+lucide.createIcons();
+
+window.lucideRefresh = function () {
+    lucide.createIcons();
+};

@@ -8,7 +8,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('app:monitor-scanner')->everyThirtySeconds();
+Schedule::command('app:monitor-scanner')->everyFiveSeconds();
 Schedule::call(function () {
     logger('Inline scheduled task executed.');
-})->everyThirtySeconds();
+})->everyFiveSeconds();

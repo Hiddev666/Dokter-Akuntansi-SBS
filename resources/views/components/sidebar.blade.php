@@ -3,19 +3,20 @@
         [
             'label' => 'Dashboard',
             'route' => 'dashboard',
-            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>',
+            'icon' => 'layout-grid',
         ],
         [
             'label' => 'Master Data',
-            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>',
+            'icon' => 'book-open',
             'children' => [
                 ['label' => 'Vendor', 'route' => 'vendors.index'],
+                ['label' => 'Jenis Dokumen', 'route' => 'document-types.index'],
             ],
         ],
         [
-            'label' => 'Profile',
-            'route' => 'profile.edit',
-            'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+            'label' => 'File Management',
+            'route' => 'file-managements.index',
+            'icon' => 'folder',
         ],
     ];
 
@@ -62,24 +63,16 @@
                             ])
                             x-bind:title="$store.sidebar.collapsed ? '{{ $item['label'] }}' : ''"
                         >
-                            <span class="shrink-0">{!! $item['icon'] !!}</span>
+                            <span class="shrink-0"><i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i></span>
                             <span
                                 class="flex-1 text-left whitespace-nowrap transition-opacity duration-200"
                                 :class="$store.sidebar.collapsed ? 'opacity-0 hidden' : 'opacity-100'"
                             >{{ $item['label'] }}</span>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="shrink-0 transition-transform duration-200"
+                            <i
+                                data-lucide="chevron-right"
+                                class="shrink-0 w-4 h-4 transition-transform duration-200"
                                 :class="open ? 'rotate-90' : ''"
-                            ><path d="m9 18 6-6-6-6"/></svg>
+                            ></i>
                         </button>
 
                         {{-- Children --}}
@@ -117,7 +110,7 @@
                             ])
                             x-bind:title="$store.sidebar.collapsed ? '{{ $item['label'] }}' : ''"
                         >
-                            <span class="shrink-0">{!! $item['icon'] !!}</span>
+                            <span class="shrink-0"><i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i></span>
                             <span
                                 class="whitespace-nowrap transition-opacity duration-200"
                                 :class="$store.sidebar.collapsed ? 'opacity-0 hidden' : 'opacity-100'"
@@ -151,11 +144,7 @@
                 class="flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
                 x-bind:title="$store.sidebar.collapsed ? 'Log Out' : ''"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" x2="9" y1="12" y2="12"/>
-                </svg>
+                <i data-lucide="log-out" class="shrink-0 w-5 h-5"></i>
                 <span
                     class="whitespace-nowrap transition-opacity duration-200"
                     :class="$store.sidebar.collapsed ? 'opacity-0 hidden' : 'opacity-100'"
@@ -169,28 +158,18 @@
         @click="$store.sidebar.toggle()"
         class="hidden md:flex absolute -right-3 top-20 h-6 w-6 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 transition-colors"
     >
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="transition-transform duration-300"
+        <i
+            data-lucide="chevron-left"
+            class="w-3.5 h-3.5 transition-transform duration-300"
             :class="$store.sidebar.collapsed ? 'rotate-180' : ''"
-        >
-            <path d="m15 18-6-6 6-6"/>
-        </svg>
+        ></i>
     </button>
 </aside>
 
 <!-- Mobile Overlay -->
 <div
     x-data="{ open: false }"
-    @toggle-sidebar.window="open = !open"
+    @toggle-sidebar.window="open = !open; $nextTick(() => lucideRefresh())"
     @keydown.escape.window="open = false"
     class="md:hidden"
 >
@@ -227,9 +206,7 @@
                 <span class="font-semibold text-gray-900">{{ config('app.name', 'Laravel') }}</span>
             </a>
             <button @click="open = false" class="p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-                </svg>
+                <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
 
@@ -244,21 +221,13 @@
                                 @click="open = !open"
                                 class="flex items-center gap-3 w-full rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
                             >
-                                <span class="shrink-0">{!! $item['icon'] !!}</span>
+                                <span class="shrink-0"><i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i></span>
                                 <span class="flex-1 text-left">{{ $item['label'] }}</span>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="shrink-0 transition-transform duration-200"
+                                <i
+                                    data-lucide="chevron-right"
+                                    class="shrink-0 w-4 h-4 transition-transform duration-200"
                                     :class="open ? 'rotate-90' : ''"
-                                ><path d="m9 18 6-6-6-6"/></svg>
+                                ></i>
                             </button>
 
                             {{-- Children --}}
@@ -297,7 +266,7 @@
                                     'text-gray-600 hover:bg-gray-100 hover:text-gray-900' => !request()->routeIs($item['route']),
                                 ])
                             >
-                                <span class="shrink-0">{!! $item['icon'] !!}</span>
+                                <span class="shrink-0"><i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i></span>
                                 <span>{{ $item['label'] }}</span>
                             </a>
                         </li>
@@ -324,11 +293,7 @@
                     type="submit"
                     class="flex items-center gap-2 w-full rounded-lg px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                        <polyline points="16 17 21 12 16 7"/>
-                        <line x1="21" x2="9" y1="12" y2="12"/>
-                    </svg>
+                    <i data-lucide="log-out" class="shrink-0 w-5 h-5"></i>
                     <span>Log Out</span>
                 </button>
             </form>

@@ -23,7 +23,7 @@ class InvoiceNumberExtractor
         return null;
     }
 
-    public function generateS3Filename(?string $invoiceNumber, string $originalExtension): string
+    public function generateS3Filename(?string $vendorName, ?string $invoiceNumber, string $originalExtension): string
     {
         if ($invoiceNumber === null) {
             return '';
@@ -34,7 +34,7 @@ class InvoiceNumberExtractor
             default => $originalExtension,
         };
 
-        return "INV_{$invoiceNumber}.{$safeExtension}";
+        return "INV_{$vendorName}_{$invoiceNumber}.{$safeExtension}";
     }
 
     protected function cleanOcrNoise(string $value): string

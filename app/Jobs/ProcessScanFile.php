@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\Vendor;
 use App\Services\InvoiceNumberExtractor;
+use App\Services\OcrSearchService;
 use App\Services\OcrService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -28,10 +30,11 @@ class ProcessScanFile implements ShouldQueue
         public string $filename,
     ) {}
 
-    public function handle(OcrService $ocr, InvoiceNumberExtractor $extractor): void
+    public function handle(OcrService $ocr, InvoiceNumberExtractor $extractor, OcrSearchService $search): void
     {
         $incomingPath = "scanner/incoming/{$this->filename}";
         $fullPath = storage_path("app/private/{$incomingPath}");
+        $vendorNames = Vendor::pluck('name')->toArray();
 
         if (! file_exists($fullPath)) {
             Log::warning('File not found for OCR processing', ['file' => $this->filename]);
@@ -50,12 +53,19 @@ class ProcessScanFile implements ShouldQueue
         $ocrText = $result['text'] ?? '';
         $invoiceNumber = $extractor->extract($ocrText);
 
+        $vendorMatch = $search->searchData(
+            [['text' => $ocrText]],
+            $vendorNames
+        )->first();
+        $vendorName = strtoupper($vendorMatch['matches']->first()['keyword']) ?? 'UNDEFINED';
+
         $originalExtension = pathinfo($this->filename, PATHINFO_EXTENSION);
-        $s3Filename = $extractor->generateS3Filename($invoiceNumber, $originalExtension);
+        $s3Filename = $extractor->generateS3Filename($vendorName, $invoiceNumber, $originalExtension);
 
         $ocrData = [
             'filename' => $this->filename,
             'invoice_number' => $invoiceNumber,
+            'vendor_name' => $vendorName,
             's3_filename' => $s3Filename ?: $this->filename,
             'text' => $ocrText,
             'processing_time_ms' => $result['processing_time_ms'] ?? null,
@@ -67,16 +77,18 @@ class ProcessScanFile implements ShouldQueue
             json_encode($ocrData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
         );
 
-        $uploadFilename = $s3Filename ?: $this->filename;
+        $uploadFilename = ''.$s3Filename ?: $this->filename;
 
         $content = file_get_contents($fullPath);
         Storage::disk('s3')->put("scanner/originals/{$uploadFilename}", $content);
+        Storage::disk('ftp_final')->put("INVOICE/{$vendorName}/{$uploadFilename}", $content);
 
         Storage::disk('local')->delete($incomingPath);
 
         Log::info('OCR processed successfully', [
             'filename' => $this->filename,
             'invoice_number' => $invoiceNumber,
+            'vendor_name' => $vendorName,
             's3_filename' => $uploadFilename,
             'processing_time_ms' => $ocrData['processing_time_ms'],
         ]);
